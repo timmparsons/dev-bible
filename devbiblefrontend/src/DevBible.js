@@ -6,7 +6,7 @@ class DevBible extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      todos: []
+      bibleList: []
     };
   }
   
@@ -30,10 +30,10 @@ class DevBible extends Component {
     }
     return response.json();
   })
-  .then(todos => this.setState({todos}));
+  .then(bibleList => this.setState({bibleList}));
 }
   render() {
-    const bibleList = this.state.todos.map((t) => (
+    const bibleList = this.state.bibleList.map((t) => (
       <BibleItem
         key={t._id}
         {...t}
