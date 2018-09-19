@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import BibleItem from './BibleItem';
+import DevForm from './DevForm';
 const APIURL = '/api/todos';
 
 class DevBible extends Component {
@@ -8,6 +9,7 @@ class DevBible extends Component {
     this.state = {
       bibleList: []
     };
+    this.addNewItem = this.addNewItem.bind(this);
   }
   
   componentWillMount() {
@@ -32,6 +34,11 @@ class DevBible extends Component {
   })
   .then(bibleList => this.setState({bibleList}));
 }
+
+addNewItem(val){
+  console.log("Adding new item from DevBible Component: ", val)
+}
+
   render() {
     const bibleList = this.state.bibleList.map((t) => (
       <BibleItem
@@ -42,6 +49,7 @@ class DevBible extends Component {
     return (
       <div>
         <h1>Dev Bible</h1>
+        <DevForm addNewItem={this.addNewItem}/>
         <ul>
           {bibleList}
         </ul>
