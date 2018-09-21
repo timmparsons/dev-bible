@@ -9,7 +9,7 @@ class DevBible extends Component {
     this.state = {
       bibleList: []
     };
-    this.addNewItem = this.addNewItem.bind(this);
+    this.addDevItem = this.addDevItem.bind(this);
   }
   
   componentWillMount() {
@@ -35,8 +35,32 @@ class DevBible extends Component {
   .then(bibleList => this.setState({bibleList}));
 }
 
-addNewItem(val){
-  console.log("Adding new item from DevBible Component: ", val)
+//Adding the new list item and passing down to DevForm
+addDevItem(newURL) {
+  fetch(APIURL, {
+    method: 'post',
+    headers: new Headers({
+      'Content-Type': 'application/json',
+    }),
+  body: JSON.stringify({name: newURL}) 
+  })
+    .then(response => {
+      if(!response.ok) {
+        if(response.status >=400 && response.status < 500) {
+          return response.json().then(data => {
+            let err = {errorMessage: data.message};
+            throw err;
+          }) 
+        } else {
+          let err = {errorMessage: 'Please try again later, server not sending response'};
+          throw err;
+      }
+    }
+    return response.json();
+  })
+  .then(newDevItem => {
+  this.setState({bibleList: [...this.state.bibleList, newDevItem]})
+})
 }
 
   render() {
@@ -49,7 +73,7 @@ addNewItem(val){
     return (
       <div>
         <h1>Dev Bible</h1>
-        <DevForm addNewItem={this.addNewItem}/>
+        <DevForm addDevItem={this.addDevItem}/>
         <ul>
           {bibleList}
         </ul>

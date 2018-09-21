@@ -8,27 +8,28 @@ class DevForm extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   
-  handleChange(e) {
-    this.setState({
-      inputValue: e.target.value
-    });
-  }
+handleChange(e) {
+  this.setState({
+    inputValue: e.target.value
+  });
+}
   
   handleSubmit() {
-    this.props.addNewItem(this.state.inputValue)
-      }
+    this.props.addDevItem(this.state.inputValue);
+  }
+      
   render() {
     return (
       <div>
         <input 
-          type='text' 
+          type='text'
           value={this.state.inputValue}
           onChange={this.handleChange}
-          />
+        />
         <button
           onClick={this.handleSubmit}>
             Add Item
-          </button>
+        </button>
       </div>  
     )
   }
