@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import BibleItem from './BibleItem';
 import DevForm from './DevForm';
+import * as apiCalls from './api';
 const APIURL = '/api/todos/';
 
 class DevBible extends Component {
@@ -13,79 +14,25 @@ class DevBible extends Component {
   }
   
   componentWillMount() {
-    this.loadTodos();
+    this.loadDevList();
   }
-  // Load todos from API
-  loadTodos() {
-    fetch(APIURL)
-    .then(response => {
-      if(!response.ok) {
-        if(response.status >=400 && response.status < 500) {
-          return response.json().then(data => {
-            let err = {errorMessage: data.message};
-            throw err;
-          }) 
-        } else {
-          let err = {errorMessage: 'Please try again later, server not sending response'};
-          throw err;
-      }
-    }
-    return response.json();
-  })
-  .then(bibleList => this.setState({bibleList}));
-}
+  // Load devlist from API
+  async loadDevList() {
+    let devListItem = await apiCalls.loadDevList();
+    this.setState({devListItem});
+  }
 
 //Adding the new list item and passing down to DevForm
-addDevItem(newURL) {
-  fetch(APIURL, {
-    method: 'post',
-    headers: new Headers({
-      'Content-Type': 'application/json',
-    }),
-  body: JSON.stringify({name: newURL}) 
-  })
-    .then(response => {
-      if(!response.ok) {
-        if(response.status >=400 && response.status < 500) {
-          return response.json().then(data => {
-            let err = {errorMessage: data.message};
-            throw err;
-          }) 
-        } else {
-          let err = {errorMessage: 'Please try again later, server not sending response'};
-          throw err;
-      }
-    }
-    return response.json();
-  })
-  .then(newDevItem => {
+async addDevItem(newURL) {
+  let newDevItem = await apiCalls.addDevItem(newURL);
   this.setState({bibleList: [...this.state.bibleList, newDevItem]})
-})
 }
+
 //Delete item from list
-deleteDevItem(id) {
-  const deleteURL = APIURL + id;
-   fetch(deleteURL, {
-    method: 'delete'
-  })
-    .then(response => {
-      if(!response.ok) {
-        if(response.status >=400 && response.status < 500) {
-          return response.json().then(data => {
-            let err = {errorMessage: data.message};
-            throw err;
-          }) 
-        } else {
-          let err = {errorMessage: 'Please try again later, server not sending response'};
-          throw err;
-      }
-    }
-    return response.json();
-  })
-  .then(() => {
-    const bibleList = this.state.bibleList.filter(devListItem => devListItem._id !== id);
-    this.setState({bibleList: bibleList})
-})
+async deleteDevItem(id) {
+  await apiCalls.removeDevItem(id);  
+  const bibleList = this.state.bibleList.filter(devListItem => devListItem._id !== id);
+  this.setState({bibleList: bibleList});
 }
 
   render() {
