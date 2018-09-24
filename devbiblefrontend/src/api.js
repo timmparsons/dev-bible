@@ -1,6 +1,6 @@
 const APIURL = '/api/todos/';
 
-export async function loadDevList() {
+export async function getDevList() {
   return fetch(APIURL)
     .then(response => {
       if(!response.ok) {

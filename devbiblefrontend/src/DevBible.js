@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import BibleItem from './BibleItem';
 import DevForm from './DevForm';
 import * as apiCalls from './api';
-const APIURL = '/api/todos/';
+// const APIURL = '/api/todos/';
 
 class DevBible extends Component {
   constructor(props) {
@@ -16,24 +16,26 @@ class DevBible extends Component {
   componentWillMount() {
     this.loadDevList();
   }
+  
+  
   // Load devlist from API
   async loadDevList() {
-    let devListItem = await apiCalls.loadDevList();
-    this.setState({devListItem});
+    let bibleList = await apiCalls.getDevList();
+    this.setState({bibleList});
   }
 
-//Adding the new list item and passing down to DevForm
-async addDevItem(newURL) {
-  let newDevItem = await apiCalls.addDevItem(newURL);
-  this.setState({bibleList: [...this.state.bibleList, newDevItem]})
-}
+  //Adding the new list item and passing down to DevForm
+  async addDevItem(newURL) {
+    let newDevItem = await apiCalls.addDevItem(newURL);
+    this.setState({bibleList: [...this.state.bibleList, newDevItem]})
+  }
 
-//Delete item from list
-async deleteDevItem(id) {
-  await apiCalls.removeDevItem(id);  
-  const bibleList = this.state.bibleList.filter(devListItem => devListItem._id !== id);
-  this.setState({bibleList: bibleList});
-}
+  //Delete item from list
+  async deleteDevItem(id) {
+    await apiCalls.removeDevItem(id);  
+    const bibleList = this.state.bibleList.filter(devListItem => devListItem._id !== id);
+    this.setState({bibleList: bibleList});
+  }
 
   render() {
     const bibleList = this.state.bibleList.map((devBibleDataFromAPI) => (
